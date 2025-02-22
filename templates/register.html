@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up | Flask App</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .input-group {
+            text-align: left;
+            margin-bottom: 10px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+
+        input:focus {
+            border-color: #667eea;
+            outline: none;
+        }
+
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            background: #5a67d8;
+        }
+
+        .login-link {
+            margin-top: 15px;
+            display: block;
+            color: #667eea;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .login-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+
+    <script>
+        function validate() {
+            var password = document.getElementById("password").value;
+            var cpassword = document.getElementById("cpassword").value;
+            if (password !== cpassword) {
+                alert("Passwords do not match!");
+                return false;
+            }
+            return true;
+        }
+    </script>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Create an Account</h2>
+        <form action="/register" method="POST" onsubmit="return validate()">
+            
+            <div class="input-group">
+                <label>Email:</label>
+                <input type="email" name="email" required>
+            </div>
+
+            <div class="input-group">
+                <label>Password:</label>
+                <input type="password" name="password" id="password" required>
+            </div>
+
+            <div class="input-group">
+                <label>Confirm Password:</label>
+                <input type="password" name="cpassword" id="cpassword" required>
+            </div>
+
+            <div class="input-group">
+                <label>First Name:</label>
+                <input type="text" name="firstName" required>
+            </div>
+
+            <div class="input-group">
+                <label>Last Name:</label>
+                <input type="text" name="lastName">
+            </div>
+
+            <div class="input-group">
+                <label>Address Line 1:</label>
+                <input type="text" name="address1" required>
+            </div>
+
+            <div class="input-group">
+                <label>Address Line 2:</label>
+                <input type="text" name="address2">
+            </div>
+
+            <div class="input-group">
+                <label>Zipcode:</label>
+                <input type="text" name="zipcode" required>
+            </div>
+
+            <div class="input-group">
+                <label>City:</label>
+                <input type="text" name="city" required>
+            </div>
+
+            <div class="input-group">
+                <label>State:</label>
+                <input type="text" name="state" required>
+            </div>
+
+            <div class="input-group">
+                <label>Country:</label>
+                <input type="text" name="country" required>
+            </div>
+
+            <div class="input-group">
+                <label>Phone Number:</label>
+                <input type="text" name="phone" required>
+            </div>
+
+            <button type="submit" class="btn">Register</button>
+        </form>
+        <a href="/loginForm" class="login-link">Already have an account? Login here</a>
+    </div>
+
+</body>
+</html>

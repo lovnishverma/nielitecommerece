@@ -1,0 +1,257 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Cart</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/cart.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/topStyle.css') }}">
+    <script>
+        function toggleDropdown() {
+            document.querySelector(".dropdown-content").classList.toggle("show");
+        }
+    </script>
+    <style>
+        /* Reset styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+
+        body {
+            background: #f4f4f4;
+            padding: 20px;
+        }
+
+        /* Navbar */
+        #title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            padding: 15px;
+            box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        /* Search Bar */
+        #searchBox {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        #searchButton {
+            padding: 8px 12px;
+            background: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        /* Sign-in / Dropdown */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropbtn {
+            background: none;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background: white;
+            min-width: 160px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            padding: 10px;
+            display: block;
+            text-decoration: none;
+            color: black;
+        }
+
+        .dropdown-content a:hover {
+            background: #007bff;
+            color: white;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        /* Cart */
+        #kart {
+            font-weight: bold;
+        }
+
+        #cartIcon {
+            width: 25px;
+            margin-right: 5px;
+        }
+
+        /* Cart Items */
+        #cartItems {
+            max-width: 800px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            margin: 50px auto;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        #tableItems > div {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        #itemImage img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        #itemName {
+            flex-grow: 1;
+            margin-left: 15px;
+        }
+
+        #itemPrice {
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        #total {
+            text-align: right;
+            font-size: 1.2em;
+            font-weight: bold;
+            padding-top: 15px;
+        }
+
+        /* Checkout Button */
+        .checkout-btn {
+            display: block;
+            width: 100%;
+            max-width: 400px;
+            margin: 20px auto;
+            padding: 12px;
+            background: #007bff;
+            color: white;
+            font-size: 1.2em;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: 0.3s ease;
+        }
+
+        .checkout-btn:hover {
+            background: #0056b3;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            #title {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            #searchBox, #searchButton {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+
+            #tableItems > div {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            #itemName {
+                margin-left: 0;
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div id="title">
+    <form>
+        <input id="searchBox" type="text" name="searchQuery" placeholder="Search...">
+        <input id="searchButton" type="submit" value="Search">
+    </form>
+
+    {% if not loggedIn %}
+    <div id="signInButton">
+        <a class="link" href="/loginForm">Sign In</a>
+    </div>
+    {% else %}
+    <div class="dropdown">
+        <button class="dropbtn" onclick="toggleDropdown()">Hello, <br>{{firstName}}</button>
+        <div class="dropdown-content">
+            <a href="/account/orders">Your orders</a>
+            <a href="/account/profile">Your profile</a>
+            <hr>
+            <a href="/logout">Sign Out</a>
+        </div>
+    </div>
+    {% endif %}
+
+    <div id="kart">
+        <a class="link" href="/cart">
+            <img src="{{ url_for('static', filename='images/shoppingCart.png') }}" id="cartIcon" />
+            CART ({{ noOfItems }})
+        </a>
+    </div>
+</div>
+
+<div id="cartItems">
+    <h2>Shopping Cart</h2>
+    <div id="tableItems">
+        {% for row in products %}
+        <div>
+            <div id="itemImage">
+                <img src="{{ url_for('static', filename='uploads/' + row[3]) }}" id="image"/>
+            </div>
+            <div id="itemName">
+                <span id="itemNameTag">{{ row[1] }}</span><br>
+                In stock<br>
+                <a href="/removeFromCart?productId={{ row[0] }}" style="color: red;">Remove</a>
+            </div>
+            <div id="itemPrice">
+                Rs {{ row[2] }}
+            </div>
+        </div>
+        {% endfor %}
+        <div id="total">
+            <span id="subtotal">Subtotal</span> : Rs {{ totalPrice }}
+        </div>
+    </div>
+</div>
+
+<a href="/checkout" class="checkout-btn">Proceed to Checkout</a>
+
+</body>
+</html>

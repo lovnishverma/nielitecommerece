@@ -1,0 +1,221 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/editProfile.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/topStyle.css') }}">
+    <script>
+        function toggleDropdown() {
+            document.querySelector(".dropdown-content").classList.toggle("show");
+        }
+    </script>
+    <style>
+        /* Reset styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+
+        body {
+            background: #f4f4f4;
+            padding: 20px;
+        }
+
+        /* Top bar */
+        #title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            padding: 15px;
+            box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        /* Search Bar */
+        #searchBox {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        #searchButton {
+            padding: 8px 12px;
+            background: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        /* Sign-in / Dropdown */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropbtn {
+            background: none;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background: white;
+            min-width: 160px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            padding: 10px;
+            display: block;
+            text-decoration: none;
+            color: black;
+        }
+
+        .dropdown-content a:hover {
+            background: #007bff;
+            color: white;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        /* Cart */
+        #kart {
+            font-weight: bold;
+        }
+
+        #cartIcon {
+            width: 25px;
+            margin-right: 5px;
+        }
+
+        /* Profile Form */
+        .display {
+            max-width: 500px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            margin: 50px auto;
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 15px;
+        }
+
+        .display p {
+            text-align: left;
+            font-weight: bold;
+            margin: 8px 0;
+        }
+
+        .display input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .display input[type="submit"] {
+            background: #007bff;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s ease;
+            border: none;
+            padding: 12px;
+        }
+
+        .display input[type="submit"]:hover {
+            background: #0056b3;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            #title {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            #searchBox, #searchButton {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+
+            .display {
+                width: 90%;
+                padding: 15px;
+            }
+
+            .dropdown {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div id="title">
+    <form>
+        <input id="searchBox" type="text" name="searchQuery" placeholder="Search...">
+        <input id="searchButton" type="submit" value="Search">
+    </form>
+
+    {% if not loggedIn %}
+    <div id="signInButton">
+        <a class="link" href="/loginForm">Sign In</a>
+    </div>
+    {% else %}
+    <div class="dropdown">
+        <button class="dropbtn" onclick="toggleDropdown()">Hello, <br>{{firstName}}</button>
+        <div class="dropdown-content">
+            <a href="/account/orders">Your orders</a>
+            <a href="/account/profile">Your profile</a>
+            <hr>
+            <a href="/logout">Sign Out</a>
+        </div>
+    </div>
+    {% endif %}
+
+    <div id="kart">
+        <a class="link" href="/cart">
+            <img src="{{ url_for('static', filename='images/shoppingCart.png') }}" id="cartIcon" />
+            CART ({{ noOfItems }})
+        </a>
+    </div>
+</div>
+
+<div class="display">
+    <h2>Edit Profile</h2>
+    <form action="/updateProfile" method="POST">
+        <p>Email:<input type="email" name="email" value="{{ profileData[1] }}" readonly></p>
+        <p>First Name:<input type="text" name="firstName" value="{{ profileData[2] }}"></p>
+        <p>Last Name:<input type="text" name="lastName" value="{{ profileData[3] }}"></p>
+        <p>Address 1:<input type="text" name="address1" value="{{ profileData[4] }}"></p>
+        <p>Address 2:<input type="text" name="address2" value="{{ profileData[5] }}"></p>
+        <p>Zip Code:<input type="text" name="zipcode" value="{{ profileData[6] }}"></p>
+        <p>City:<input type="text" name="city" value="{{ profileData[7] }}"></p>
+        <p>State:<input type="text" name="state" value="{{ profileData[8] }}"></p>
+        <p>Country:<input type="text" name="country" value="{{ profileData[9] }}"></p>
+        <p>Phone Number:<input type="text" name="phone" value="{{ profileData[10] }}"></p>
+        <input type="submit" value="Save">
+    </form>
+</div>
+
+</body>
+</html>

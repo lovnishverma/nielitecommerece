@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Product</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f4f4f4;
+            text-align: center;
+        }
+        h2 {
+            color: #333;
+        }
+        form {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 50%;
+            margin: auto;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            text-align: left;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        input:focus, textarea:focus, select:focus {
+            border-color: #007BFF;
+            outline: none;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 15px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 15px;
+            text-decoration: none;
+            color: red;
+            font-weight: bold;
+        }
+        #image-preview {
+            margin-top: 10px;
+            max-width: 150px;
+            display: block;
+            border: 1px solid #ddd;
+            padding: 5px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Edit Product</h2>
+
+<form action="{{ url_for('edit_product', productId=product[0]) }}" method="POST" enctype="multipart/form-data">
+    <label for="name">Product Name:</label>
+    <input type="text" name="name" id="name" value="{{ product[1] }}" required>
+
+    <label for="price">Price (₹):</label>
+    <input type="number" name="price" id="price" step="0.01" value="{{ product[2] }}" required>
+
+    <label for="description">Description:</label>
+    <textarea name="description" id="description" required>{{ product[3] }}</textarea>
+
+    <label for="stock">Stock Quantity:</label>
+    <input type="number" name="stock" id="stock" value="{{ product[5] }}" required>
+
+    <label for="category">Category:</label>
+    <select name="category" id="category" required>
+        {% for category in categories %}
+            <option value="{{ category[0] }}" {% if category[0] == product[6] %}selected{% endif %}>
+                {{ category[1] }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <label for="image">Upload New Product Image (Leave empty to keep current):</label>
+    <input type="file" name="image" id="image" accept="image/*">
+
+    <p>Current Image:</p>
+    <img src="{{ url_for('static', filename='uploads/' + product[4]) }}" width="100" height="100">
+
+    <button type="submit">Save Changes</button>
+</form>
+
+
+    <a href="{{ url_for('admin_dashboard') }}" class="back-link">Cancel</a>
+
+    <script>
+        function previewImage(event) {
+            const reader = new FileReader();
+            reader.onload = function () {
+                const img = document.getElementById('image-preview');
+                img.src = reader.result;
+                img.style.display = "block";
+            }
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    </script>
+
+</body>
+</html>

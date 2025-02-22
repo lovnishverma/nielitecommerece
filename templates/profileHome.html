@@ -1,0 +1,118 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Home</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/topStyle.css') }}">
+    <style>
+        /* Reset styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+
+        body {
+            background: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        #title {
+            width: 100%;
+            max-width: 600px;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .display {
+            background: white;
+            padding: 20px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            border-radius: 8px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .display a {
+            display: block;
+            background: #007bff;
+            color: white;
+            padding: 12px;
+            margin: 10px 0;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: 0.3s ease;
+        }
+
+        .display a:hover {
+            background: #0056b3;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 480px) {
+            #title {
+                padding: 10px;
+            }
+            .display {
+                font-size: 1em;
+                padding: 15px;
+            }
+            .display a {
+                font-size: 1em;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div id="title">
+    <form>
+        <input id="searchBox" type="text" name="searchQuery" placeholder="Search">
+        <input id="searchButton" type="submit" value="Search">
+    </form>
+
+    {% if not loggedIn %}
+        <div id="signInButton">
+            <a class="link" href="/loginForm">Sign In</a>
+        </div>
+    {% else %}
+        <div class="dropdown">
+            <button class="dropbtn">Hello, <br>{{ firstName }}</button>
+            <div class="dropdown-content">
+                <a href="/account/orders">Your orders</a>
+                <a href="/account/profile">Your profile</a>
+                <hr>
+                <a href="/logout">Sign Out</a>
+            </div>
+        </div>
+    {% endif %}
+
+    <div id="kart">
+        <a class="link" href="/cart">
+            <img src="{{ url_for('static', filename='images/shoppingCart.png') }}" id="cartIcon" />
+            CART {{ noOfItems }}
+        </a>
+    </div>
+</div>
+
+<div class="display">
+    <a href="/account/profile/edit">Edit Profile</a>
+    <a href="/account/profile/changePassword">Change Password</a>
+</div>
+
+</body>
+</html>
