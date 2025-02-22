@@ -45,66 +45,75 @@ def getLoginDetails():
     conn.close()
     return (loggedIn, firstName, noOfItems)
 
-#Add item to cart
-@app.route("/addItem", methods=["GET", "POST"])
-def addItem():
-    if 'email' not in session or session['email'] != "admin@nielit.gov.in":
-        return redirect(url_for('root'))  # Restrict access if not admin
+@app.route("/admin")
+def admin_dashboard():
+    if not is_admin():
+        return redirect(url_for('root'))
+    with sqlite3.connect('database.db') as conn:
+        cur = conn.cursor()
+        cur.execute('SELECT * FROM products')
+        products = cur.fetchall()
+    return render_template("admin.html", products=products)
 
+# Add new product (Admin only)
+@app.route("/admin/add", methods=["GET", "POST"])
+def add_product():
+    if not is_admin():
+        return redirect(url_for('root'))
     if request.method == "POST":
         name = request.form['name']
         price = float(request.form['price'])
         description = request.form['description']
         stock = int(request.form['stock'])
         categoryId = int(request.form['category'])
-
-        # Upload image
         image = request.files['image']
+
         if image and allowed_file(image.filename):
             filename = secure_filename(image.filename)
             image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             imagename = filename
         else:
-            imagename = "default.jpg"  # Fallback image
+            imagename = ''
 
         with sqlite3.connect('database.db') as conn:
-            try:
-                cur = conn.cursor()
-                cur.execute('''INSERT INTO products (name, price, description, image, stock, categoryId) 
-                               VALUES (?, ?, ?, ?, ?, ?)''', (name, price, description, imagename, stock, categoryId))
-                conn.commit()
-                msg = "Added successfully"
-            except:
-                conn.rollback()
-                msg = "Error occurred"
+            cur = conn.cursor()
+            cur.execute('''INSERT INTO products (name, price, description, image, stock, categoryId) VALUES (?, ?, ?, ?, ?, ?)''', 
+                        (name, price, description, imagename, stock, categoryId))
+            conn.commit()
+        return redirect(url_for('admin_dashboard'))
+    return render_template("add_product.html")
 
+# Delete product (Admin only)
+@app.route("/admin/delete/<int:productId>")
+def delete_product(productId):
+    if not is_admin():
         return redirect(url_for('root'))
-
-    # Fetch categories for dropdown
     with sqlite3.connect('database.db') as conn:
         cur = conn.cursor()
-        cur.execute('SELECT categoryId, name FROM categories')
-        categories = cur.fetchall()
+        cur.execute("DELETE FROM products WHERE productId = ?", (productId,))
+        conn.commit()
+    return redirect(url_for('admin_dashboard'))
 
-    return render_template('addItem.html', categories=categories)
-
-
-#Remove item from cart
-@app.route("/removeItem")
-def removeItem():
-    productId = request.args.get('productId')
+# Modify product (Admin only)
+@app.route("/admin/edit/<int:productId>", methods=["GET", "POST"])
+def edit_product(productId):
+    if not is_admin():
+        return redirect(url_for('root'))
     with sqlite3.connect('database.db') as conn:
-        try:
-            cur = conn.cursor()
-            cur.execute('DELETE FROM products WHERE productID = ' + productId)
+        cur = conn.cursor()
+        if request.method == "POST":
+            name = request.form['name']
+            price = float(request.form['price'])
+            description = request.form['description']
+            stock = int(request.form['stock'])
+            categoryId = int(request.form['category'])
+            cur.execute('''UPDATE products SET name=?, price=?, description=?, stock=?, categoryId=? WHERE productId=?''',
+                        (name, price, description, stock, categoryId, productId))
             conn.commit()
-            msg = "Deleted successsfully"
-        except:
-            conn.rollback()
-            msg = "Error occured"
-    conn.close()
-    print(msg)
-    return redirect(url_for('root'))
+            return redirect(url_for('admin_dashboard'))
+        cur.execute("SELECT * FROM products WHERE productId = ?", (productId,))
+        product = cur.fetchone()
+    return render_template("edit_product.html", product=product)
 
 #Display all items of a category
 @app.route("/displayCategory")
