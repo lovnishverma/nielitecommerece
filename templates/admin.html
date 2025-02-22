@@ -98,7 +98,7 @@
                 <td>{{ product[0] }}</td>
                 <td><img src="{{ url_for('static', filename='uploads/' + product[4]) }}" alt="Product Image"></td>
                 <td>{{ product[1] }}</td>
-                <td>${{ "%.2f"|format(product[5]) }}</td>
+                <td>₹{{ "%.2f"|format(product[5]) }}</td>
                 <td class="description">{{ product[3] }}</td>
                 <td>{{ product[2] }}</td>
                 <td class="actions">

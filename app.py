@@ -109,26 +109,50 @@ def delete_product(productId):
         conn.commit()
     return redirect(url_for('admin_dashboard'))
 
-# Modify product (Admin only)
 @app.route("/admin/edit/<int:productId>", methods=["GET", "POST"])
 def edit_product(productId):
     if not is_admin():
         return redirect(url_for('root'))
+
     with sqlite3.connect('database.db') as conn:
         cur = conn.cursor()
+
         if request.method == "POST":
             name = request.form['name']
             price = float(request.form['price'])
             description = request.form['description']
             stock = int(request.form['stock'])
             categoryId = int(request.form['category'])
-            cur.execute('''UPDATE products SET name=?, price=?, description=?, stock=?, categoryId=? WHERE productId=?''',
-                        (name, price, description, stock, categoryId, productId))
+
+            # Handle image update
+            image = request.files['image']
+            if image and image.filename != "":  # If a new image is uploaded
+                filename = secure_filename(image.filename)
+                image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                image.save(image_path)
+
+                cur.execute('''UPDATE products 
+                               SET name=?, price=?, description=?, image=?, stock=?, categoryId=? 
+                               WHERE productId=?''',
+                            (name, price, description, filename, stock, categoryId, productId))
+            else:
+                cur.execute('''UPDATE products 
+                               SET name=?, price=?, description=?, stock=?, categoryId=? 
+                               WHERE productId=?''',
+                            (name, price, description, stock, categoryId, productId))
+
             conn.commit()
             return redirect(url_for('admin_dashboard'))
+
+        # Fetch product details
         cur.execute("SELECT * FROM products WHERE productId = ?", (productId,))
         product = cur.fetchone()
-    return render_template("edit_product.html", product=product)
+
+        # Fetch categories for dropdown
+        cur.execute('SELECT categoryId, name FROM categories')
+        categories = cur.fetchall()
+
+    return render_template("edit_product.html", product=product, categories=categories)
 
 #Display all items of a category
 @app.route("/displayCategory")
