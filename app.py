@@ -48,6 +48,9 @@ def getLoginDetails():
 #Add item to cart
 @app.route("/addItem", methods=["GET", "POST"])
 def addItem():
+    if 'email' not in session or session['email'] != "admin@nielit.gov.in":
+        return redirect(url_for('root'))  # Restrict access if not admin
+
     if request.method == "POST":
         name = request.form['name']
         price = float(request.form['price'])
@@ -55,24 +58,36 @@ def addItem():
         stock = int(request.form['stock'])
         categoryId = int(request.form['category'])
 
-        #Upload image
+        # Upload image
         image = request.files['image']
         if image and allowed_file(image.filename):
             filename = secure_filename(image.filename)
             image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        imagename = filename
+            imagename = filename
+        else:
+            imagename = "default.jpg"  # Fallback image
+
         with sqlite3.connect('database.db') as conn:
             try:
                 cur = conn.cursor()
-                cur.execute('''INSERT INTO products (name, price, description, image, stock, categoryId) VALUES (?, ?, ?, ?, ?, ?)''', (name, price, description, imagename, stock, categoryId))
+                cur.execute('''INSERT INTO products (name, price, description, image, stock, categoryId) 
+                               VALUES (?, ?, ?, ?, ?, ?)''', (name, price, description, imagename, stock, categoryId))
                 conn.commit()
-                msg="Added successfully"
+                msg = "Added successfully"
             except:
-                msg="Error occured"
                 conn.rollback()
-        conn.close()
-        print(msg)
+                msg = "Error occurred"
+
         return redirect(url_for('root'))
+
+    # Fetch categories for dropdown
+    with sqlite3.connect('database.db') as conn:
+        cur = conn.cursor()
+        cur.execute('SELECT categoryId, name FROM categories')
+        categories = cur.fetchall()
+
+    return render_template('addItem.html', categories=categories)
+
 
 #Remove item from cart
 @app.route("/removeItem")
