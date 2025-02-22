@@ -1,8 +1,9 @@
 from flask import *
 import sqlite3, hashlib, os
 from werkzeug.utils import secure_filename
-from saveorder_wrapper import Instamojo
 import requests
+from datetime import datetime
+import pytz
 
 app = Flask(__name__)
 app.secret_key = 'randomstring'
@@ -326,9 +327,49 @@ def checkout():
         totalPrice += row[2]
     return render_template("checkout.html", products = products, totalPrice=totalPrice, loggedIn=loggedIn, firstName=firstName, noOfItems=noOfItems)
 
+
+
 @app.route("/saveorder")
 def saveorder():
-    return render_template("saveorder.html")
+    if 'email' not in session:
+        return redirect(url_for('loginForm'))
+    
+    email = session['email']
+    
+    # Get current IST timestamp
+    ist = pytz.timezone('Asia/Kolkata')
+    order_date = datetime.now(ist).strftime('%Y-%m-%d %H:%M:%S')
+
+    with sqlite3.connect('database.db') as conn:
+        cur = conn.cursor()
+
+        # Get user ID
+        cur.execute("SELECT userId FROM users WHERE email = ?", (email,))
+        userId = cur.fetchone()[0]
+
+        # Fetch products from the user's cart
+        cur.execute("""
+            SELECT productId, COUNT(productId) AS quantity, SUM(price) AS total_price
+            FROM kart JOIN products ON kart.productId = products.productId
+            WHERE kart.userId = ?
+            GROUP BY productId
+        """, (userId,))
+        
+        cart_items = cur.fetchall()
+
+        # Save each cart item as an order
+        for item in cart_items:
+            productId, quantity, total_price = item
+            cur.execute("INSERT INTO orders (userId, productId, quantity, total_price, order_date) VALUES (?, ?, ?, ?, ?)",
+                        (userId, productId, quantity, total_price, order_date))
+
+        # Clear the cart
+        cur.execute("DELETE FROM kart WHERE userId = ?", (userId,))
+        
+        conn.commit()
+
+    return render_template("order_confirmation.html", order_date=order_date)
+
 
 @app.route("/removeFromCart")
 def removeFromCart():

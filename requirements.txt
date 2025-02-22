@@ -3,7 +3,6 @@ Werkzeug
 hashlib
 os
 requests
-instamojo-wrapper
 Jinja2
 gunicorn
 flask
@@ -11,7 +10,8 @@ datetime
 flask_sqlalchemy
 flask_login
 python-dotenv
-
+datetime
+pytz
 
 
 
