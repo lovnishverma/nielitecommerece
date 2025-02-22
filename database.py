@@ -53,7 +53,14 @@ conn.execute('''CREATE TABLE allorders (
     FOREIGN KEY(userId) REFERENCES users(userId),
     FOREIGN KEY(productId) REFERENCES products(productId)
 )''')
-
+# Execute SQL command to create the wishlist table
+conn.execute('''CREATE TABLE wishlist (
+    wishlistId INTEGER PRIMARY KEY AUTOINCREMENT,  -- Unique ID for each wishlist entry
+    userId INTEGER,  -- User who added the product
+    productId INTEGER,  -- Product that is added to the wishlist
+    FOREIGN KEY(userId) REFERENCES users(userId),  -- Link to the users table
+    FOREIGN KEY(productId) REFERENCES products(productId)  -- Link to the products table
+)''')
 
 conn.close()
 

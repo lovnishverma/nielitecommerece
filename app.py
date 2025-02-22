@@ -310,6 +310,72 @@ def cart():
         totalPrice += row[2]
     return render_template("cart.html", products = products, totalPrice=totalPrice, loggedIn=loggedIn, firstName=firstName, noOfItems=noOfItems)
 
+@app.route('/addToWishlist', methods=['POST'])
+def add_to_wishlist():
+    if 'userId' not in session:  # Check if user is logged in
+        return redirect(url_for('loginForm'))  # Redirect to login page if not logged in
+    
+    user_id = session['userId']
+    product_id = request.form.get('productId')
+
+    conn = sqlite3.connect('database.db')
+    cursor = conn.cursor()
+
+    # Check if the product is already in the wishlist
+    cursor.execute("SELECT * FROM wishlist WHERE userId=? AND productId=?", (user_id, product_id))
+    existing_entry = cursor.fetchone()
+
+    if not existing_entry:
+        # Add product to wishlist
+        cursor.execute("INSERT INTO wishlist (userId, productId) VALUES (?, ?)", (user_id, product_id))
+        conn.commit()
+
+    conn.close()
+    
+    return redirect(url_for('wishlist'))
+  
+  
+@app.route('/removeFromWishlist', methods=['POST'])
+def remove_from_wishlist():
+    if 'userId' not in session:
+        return redirect(url_for('loginForm'))
+
+    user_id = session['userId']
+    product_id = request.form.get('productId')
+
+    conn = sqlite3.connect('database.db')
+    cursor = conn.cursor()
+    
+    # Remove the product from wishlist
+    cursor.execute("DELETE FROM wishlist WHERE userId=? AND productId=?", (user_id, product_id))
+    conn.commit()
+    conn.close()
+
+    return redirect(url_for('wishlist'))
+
+@app.route('/wishlist')
+def wishlist():
+    if 'userId' not in session:
+        return redirect(url_for('loginForm'))
+
+    user_id = session['userId']
+
+    conn = sqlite3.connect('database.db')
+    cursor = conn.cursor()
+
+    # Retrieve wishlist items with product details
+    cursor.execute('''SELECT products.productId, products.name, products.price, products.image
+                      FROM wishlist
+                      JOIN products ON wishlist.productId = products.productId
+                      WHERE wishlist.userId = ?''', (user_id,))
+    
+    wishlist_items = cursor.fetchall()
+    conn.close()
+
+    return render_template('wishlist.html', wishlist_items=wishlist_items)
+
+
+
 @app.route("/checkout")
 def checkout():
     if 'email' not in session:
