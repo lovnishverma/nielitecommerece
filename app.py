@@ -154,6 +154,19 @@ def edit_product(productId):
 
     return render_template("edit_product.html", product=product, categories=categories)
 
+#Display all items of a category
+@app.route("/displayCategory")
+def displayCategory():
+        loggedIn, firstName, noOfItems = getLoginDetails()
+        categoryId = request.args.get("categoryId")
+        with sqlite3.connect('database.db') as conn:
+            cur = conn.cursor()
+            cur.execute("SELECT products.productId, products.name, products.price, products.image, categories.name FROM products, categories WHERE products.categoryId = categories.categoryId AND categories.categoryId = " + categoryId)
+            data = cur.fetchall()
+        conn.close()
+        categoryName = data[0][4]
+        data = parse(data)
+        return render_template('displayCategory.html', data=data, loggedIn=loggedIn, firstName=firstName, noOfItems=noOfItems, categoryName=categoryName)
 
 @app.route("/account/profile")
 def profileHome():
@@ -248,6 +261,16 @@ def login():
             error = 'Invalid UserId / Password'
             return render_template('login.html', error=error)
 
+@app.route("/productDescription")
+def productDescription():
+    loggedIn, firstName, noOfItems = getLoginDetails()
+    productId = request.args.get('productId')
+    with sqlite3.connect('database.db') as conn:
+        cur = conn.cursor()
+        cur.execute('SELECT productId, name, price, description, image, stock FROM products WHERE productId = ' + productId)
+        productData = cur.fetchone()
+    conn.close()
+    return render_template("productDescription.html", data=productData, loggedIn = loggedIn, firstName = firstName, noOfItems = noOfItems)
 
 @app.route("/addToCart")
 def addToCart():
@@ -302,6 +325,10 @@ def checkout():
     for row in products:
         totalPrice += row[2]
     return render_template("checkout.html", products = products, totalPrice=totalPrice, loggedIn=loggedIn, firstName=firstName, noOfItems=noOfItems)
+
+@app.route("/instamojo")
+def instamojo():
+    return render_template("instamojo.html")
 
 @app.route("/removeFromCart")
 def removeFromCart():
