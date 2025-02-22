@@ -163,20 +163,6 @@ body {
     display: none;
     transition: background 0.3s;
 }
-
-.wishlist-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 1.5em;
-    color: red;
-    outline: none;
-}
-
-.wishlist-btn:focus {
-    outline: none;
-}
-
 #return-to-top i {
     color: white;
     font-size: 19px;

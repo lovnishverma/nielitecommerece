@@ -49,26 +49,6 @@
                 </a>
             </li>
         </ul>
-      <section class="items">
-    {% for data in itemData %}
-    <div class="product">
-        {% for row in data %}
-        <a href="/productDescription?productId={{row[0]}}">
-            <img src="{{ url_for('static', filename='uploads/' + row[4]) }}" alt="{{ row[1] }}">
-        </a>
-        <h3>{{ row[1] }}</h3>
-        <p>Rs {{ row[2] }}</p>
-        <!-- Wishlist button -->
-        <button class="wishlist-btn" onclick="toggleWishlist({{ row[0] }})">
-            <!-- Default icon: outline heart -->
-            <i id="wishlist-icon-{{ row[0] }}" class="far fa-heart"></i>
-        </button>
-        <a href="/addToCart?productId={{ row[0] }}" class="addToCart">Add to Cart</a>
-        {% endfor %}
-    </div>
-    {% endfor %}
-</section>
-
 
         <!-- Hamburger Menu -->
         <div class="hamburger" onclick="toggleMenu()">

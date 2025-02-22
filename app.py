@@ -514,37 +514,6 @@ def parse(data):
             i += 1
         ans.append(curr)
     return ans
-from flask import Flask, render_template, request, redirect, session, g, url_for, jsonify
-import sqlite3
-
-app = Flask(__name__)
-app.secret_key = "your_secret_key"
-
-DATABASE = "database.db"
-
-def get_db():
-    db = getattr(g, "_database", None)
-    if db is None:
-        db = g._database = sqlite3.connect(DATABASE)
-        db.row_factory = sqlite3.Row
-    return db
-
-@app.teardown_appcontext
-def close_connection(exception):
-    db = getattr(g, "_database", None)
-    if db is not None:
-        db.close()
-# Add to Wishlist
-@app.route("/addToWishlist", methods=["POST"])
-def add_to_wishlist():
-    if "user_id" not in session:
-        return jsonify({"status": "error", "message": "Please login to add to wishlist"}), 401
-
-    product_id = request.form.get("product_id")
-    user_id = session["user_id"]
-
-    db = get_db()
-    cursor = db.cursor()
 
 if __name__ == '__main__':
     app.run(debug=True)
