@@ -514,6 +514,85 @@ def parse(data):
             i += 1
         ans.append(curr)
     return ans
+  from flask import Flask, render_template, request, redirect, session, g, url_for, jsonify
+import sqlite3
+
+app = Flask(__name__)
+app.secret_key = "your_secret_key"
+
+DATABASE = "database.db"
+
+def get_db():
+    db = getattr(g, "_database", None)
+    if db is None:
+        db = g._database = sqlite3.connect(DATABASE)
+        db.row_factory = sqlite3.Row
+    return db
+
+@app.teardown_appcontext
+def close_connection(exception):
+    db = getattr(g, "_database", None)
+    if db is not None:
+        db.close()
+
+# ✅ Add to Wishlist
+@app.route("/addToWishlist", methods=["POST"])
+def add_to_wishlist():
+    if "user_id" not in session:
+        return jsonify({"status": "error", "message": "Please login to add to wishlist"}), 401
+
+    product_id = request.form.get("product_id")
+    user_id = session["user_id"]
+
+    db = get_db()
+    cursor = db.cursor()
+
+    # Check if item is already in wishlist
+    cursor.execute("SELECT * FROM wishlist WHERE user_id = ? AND product_id = ?", (user_id, product_id))
+    existing_item = cursor.fetchone()
+
+    if existing_item:
+        return jsonify({"status": "error", "message": "Already in wishlist"}), 400
+
+    cursor.execute("INSERT INTO wishlist (user_id, product_id) VALUES (?, ?)", (user_id, product_id))
+    db.commit()
+
+    return jsonify({"status": "success", "message": "Added to wishlist"})
+
+# ✅ Remove from Wishlist
+@app.route("/removeFromWishlist", methods=["POST"])
+def remove_from_wishlist():
+    if "user_id" not in session:
+        return jsonify({"status": "error", "message": "Please login to remove from wishlist"}), 401
+
+    product_id = request.form.get("product_id")
+    user_id = session["user_id"]
+
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute("DELETE FROM wishlist WHERE user_id = ? AND product_id = ?", (user_id, product_id))
+    db.commit()
+
+    return jsonify({"status": "success", "message": "Removed from wishlist"})
+
+# ✅ Fetch Wishlist Items
+@app.route("/wishlist")
+def wishlist():
+    if "user_id" not in session:
+        return redirect("/loginForm")
+
+    user_id = session["user_id"]
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute("""
+        SELECT products.* FROM products
+        JOIN wishlist ON products.id = wishlist.product_id
+        WHERE wishlist.user_id = ?
+    """, (user_id,))
+    wishlist_items = cursor.fetchall()
+
+    return render_template("wishlist.html", wishlist_items=wishlist_items)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
