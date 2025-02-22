@@ -1,7 +1,7 @@
 from flask import *
 import sqlite3, hashlib, os
 from werkzeug.utils import secure_filename
-from instamojo_wrapper import Instamojo
+from saveorder_wrapper import Instamojo
 import requests
 
 app = Flask(__name__)
@@ -326,9 +326,9 @@ def checkout():
         totalPrice += row[2]
     return render_template("checkout.html", products = products, totalPrice=totalPrice, loggedIn=loggedIn, firstName=firstName, noOfItems=noOfItems)
 
-@app.route("/instamojo")
-def instamojo():
-    return render_template("instamojo.html")
+@app.route("/saveorder")
+def saveorder():
+    return render_template("saveorder.html")
 
 @app.route("/removeFromCart")
 def removeFromCart():
