@@ -97,27 +97,32 @@
       </a>
     </div>
 
-    <!-- Product Grid -->
-    <section class="items">
-        {% for data in itemData %}
-        <div class="product">
-            {% for row in data %}
-            <a href="/productDescription?productId={{row[0]}}">
-                <img src="{{ url_for('static', filename='uploads/' + row[4]) }}" alt="{{ row[1] }}">
-            </a>
-            <h3>{{ row[1] }}</h3>
-            <p>Rs {{ row[2] }}</p>
-            <a href="/addToCart?productId={{ row[0] }}" class="addToCart">Add to Cart</a>
-          <!-- Add to Wishlist Button -->
-<form action="{{ url_for('add_to_wishlist') }}" method="post" class="wishlist-form">
-    <input type="hidden" name="productId" value="{{ row[0] }}">
-    <button type="submit" class="addToWishlist"><i class="fas fa-heart"></i> Add to Wishlist</button>
-</form>
+  
+<!-- Product Grid -->
+<section class="items">
+    {% for data in itemData %}
+    <div class="product">
+        {% for row in data %}
+        <a href="/productDescription?productId={{row[0]}}">
+            <img src="{{ url_for('static', filename='uploads/' + row[4]) }}" alt="{{ row[1] }}">
+        </a>
+        <h3>{{ row[1] }}</h3>
+        <p>Rs {{ row[2] }}</p>
 
-            {% endfor %}
-        </div>
+        <!-- Add to Cart Button -->
+        <a href="/addToCart?productId={{ row[0] }}" class="addToCart">Add to Cart</a>
+
+        <!-- Add to Wishlist Button -->
+        <form action="{{ url_for('add_to_wishlist') }}" method="post" class="wishlist-form">
+            <input type="hidden" name="productId" value="{{ row[0] }}">
+            <button type="submit" class="addToWishlist"><i class="fas fa-heart"></i> Add to Wishlist</button>
+        </form>
+
         {% endfor %}
-    </section>
+    </div>
+    {% endfor %}
+</section>
+
 <!-- Return to Top -->
 <a href="javascript:" id="return-to-top"><i class="fa fa-arrow-up" aria-hidden="true"></i></a>
     <!-- Scripts -->
