@@ -347,12 +347,13 @@ def saveorder():
         cur.execute("SELECT userId FROM users WHERE email = ?", (email,))
         userId = cur.fetchone()[0]
 
-        # Fetch products from the user's cart
+        # Fetch products from the user's cart with explicit table references
         cur.execute("""
-            SELECT productId, COUNT(productId) AS quantity, SUM(price) AS total_price
-            FROM kart JOIN products ON kart.productId = products.productId
+            SELECT kart.productId, COUNT(kart.productId) AS quantity, SUM(products.price) AS total_price
+            FROM kart 
+            JOIN products ON kart.productId = products.productId
             WHERE kart.userId = ?
-            GROUP BY productId
+            GROUP BY kart.productId
         """, (userId,))
         
         cart_items = cur.fetchall()
@@ -360,7 +361,7 @@ def saveorder():
         # Save each cart item as an order
         for item in cart_items:
             productId, quantity, total_price = item
-            cur.execute("INSERT INTO orders (userId, productId, quantity, total_price, order_date) VALUES (?, ?, ?, ?, ?)",
+            cur.execute("INSERT INTO allorders (userId, productId, quantity, total_price, order_date) VALUES (?, ?, ?, ?, ?)",
                         (userId, productId, quantity, total_price, order_date))
 
         # Clear the cart
@@ -371,6 +372,63 @@ def saveorder():
     return render_template("order_confirmation.html", order_date=order_date)
 
 
+
+@app.route("/vieworders")
+def vieworders():
+    if 'email' not in session or session['email'] != "admin@nielit.gov.in":
+        return "Access Denied! Only admin can view orders.", 403
+
+    with sqlite3.connect('database.db') as conn:
+        cur = conn.cursor()
+
+        # Fetch all orders with user and product details
+        cur.execute("""
+            SELECT allorders.orderId, users.firstName, users.lastName, users.email, 
+       products.name, allorders.quantity, allorders.total_price, allorders.order_date
+FROM allorders
+JOIN users ON allorders.userId = users.userId
+JOIN products ON allorders.productId = products.productId
+ORDER BY allorders.order_date DESC;
+        """)
+        
+        orders = cur.fetchall()
+
+    return render_template("vieworders.html", orders=orders)
+
+
+@app.route("/account/orders")
+def user_orders():
+    if 'email' not in session:
+        return redirect(url_for('loginForm'))
+    
+    email = session['email']
+
+    with sqlite3.connect('database.db') as conn:
+        cur = conn.cursor()
+
+        # Get user ID
+        cur.execute("SELECT userId FROM users WHERE email = ?", (email,))
+        user = cur.fetchone()
+
+        if not user:
+            return "User not found.", 404
+
+        userId = user[0]
+
+        # Fetch orders for the logged-in user
+        cur.execute("""
+            SELECT allorders.orderId, products.name, allorders.quantity, allorders.total_price, allorders.order_date
+            FROM allorders
+            JOIN products ON allorders.productId = products.productId
+            WHERE allorders.userId = ?
+            ORDER BY allorders.order_date DESC
+        """, (userId,))
+
+        orders = cur.fetchall()
+
+    return render_template("user_orders.html", orders=orders)
+
+  
 @app.route("/removeFromCart")
 def removeFromCart():
     if 'email' not in session:
