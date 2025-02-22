@@ -66,3 +66,9 @@ body {
     text-align: center;
     padding: 20px;
 }
+
+.carousel-item img {
+    max-height: 200px; /* Adjust height as needed */
+    width: 50%; /* Ensures full width */
+    object-fit: cover; /* Crops excess while maintaining aspect ratio */
+}
