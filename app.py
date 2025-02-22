@@ -5,11 +5,16 @@ from instamojo_wrapper import Instamojo
 import requests
 
 app = Flask(__name__)
-app.secret_key = 'nielitrandomstringsecret'
+app.secret_key = 'random string'
 UPLOAD_FOLDER = 'static/uploads'
 ALLOWED_EXTENSIONS = set(['jpeg', 'jpg', 'png', 'gif'])
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
+
+# Check if user is admin
+def is_admin():
+    return 'email' in session and session['email'] == 'admin@nielit.gov.in'
+  
 #Home page
 @app.route("/")
 def root():
@@ -347,54 +352,6 @@ def parse(data):
             i += 1
         ans.append(curr)
     return ans
-  
-@app.route("/addProductForm")
-def addProductForm():
-    if 'email' not in session:
-        return redirect(url_for('loginForm'))
-    loggedIn, firstName, noOfItems = getLoginDetails()
-    
-    with sqlite3.connect('database.db') as conn:
-        cur = conn.cursor()
-        cur.execute("SELECT categoryId, name FROM categories")
-        categoryData = cur.fetchall()
-    
-    return render_template("addProduct.html", loggedIn=loggedIn, firstName=firstName, noOfItems=noOfItems, categoryData=categoryData)
 
-@app.route("/addItem", methods=["POST"])
-def addItem():
-    if 'email' not in session:
-        return redirect(url_for('loginForm'))
-
-    name = request.form['name']
-    price = float(request.form['price'])
-    description = request.form['description']
-    stock = int(request.form['stock'])
-    categoryId = int(request.form['category'])
-    
-    # Upload image
-    image = request.files['image']
-    if image and allowed_file(image.filename):
-        filename = secure_filename(image.filename)
-        image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        imagename = filename
-    else:
-        imagename = "default.jpg"  # Placeholder if no image is uploaded
-
-    with sqlite3.connect('database.db') as conn:
-        try:
-            cur = conn.cursor()
-            cur.execute('''INSERT INTO products (name, price, description, image, stock, categoryId) 
-                           VALUES (?, ?, ?, ?, ?, ?)''', (name, price, description, imagename, stock, categoryId))
-            conn.commit()
-            msg = "Product added successfully"
-        except Exception as e:
-            conn.rollback()
-            msg = f"Error occurred: {str(e)}"
-    
-    return redirect(url_for('root'))
-
-  
-  
 if __name__ == '__main__':
     app.run(debug=True)
