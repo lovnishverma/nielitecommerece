@@ -178,6 +178,18 @@ body {
     top: 5px;
 }
 
+.addToWishlist, .removeFromWishlist {
+    background-color: #ff4081;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.addToWishlist:hover, .removeFromWishlist:hover {
+    background-color: #e91e63;
+}
 /* Footer */
 .footer {
     background-color: #1d3557;
