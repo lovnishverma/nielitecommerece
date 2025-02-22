@@ -75,7 +75,7 @@ def add_product():
             image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             imagename = filename
         else:
-            imagename = "https://cdn.glitch.global/2ded0908-dd38-4f41-9e65-fbe9960aaeeb/product-default.png?v=1740218698200"  # Fallback image
+            imagename = "product-default.png"  # Fallback image
 
         with sqlite3.connect('database.db') as conn:
             try:
