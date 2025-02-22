@@ -58,30 +58,45 @@ def admin_dashboard():
 # Add new product (Admin only)
 @app.route("/admin/add", methods=["GET", "POST"])
 def add_product():
-    if not is_admin():
-        return redirect(url_for('root'))
+    if 'email' not in session or session['email'] != "admin@nielit.gov.in":
+        return redirect(url_for('root'))  # Restrict access if not admin
+
     if request.method == "POST":
         name = request.form['name']
         price = float(request.form['price'])
         description = request.form['description']
         stock = int(request.form['stock'])
         categoryId = int(request.form['category'])
-        image = request.files['image']
 
+        # Upload image
+        image = request.files['image']
         if image and allowed_file(image.filename):
             filename = secure_filename(image.filename)
             image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             imagename = filename
         else:
-            imagename = ''
+            imagename = "https://cdn.glitch.global/2ded0908-dd38-4f41-9e65-fbe9960aaeeb/product-default.png?v=1740218698200"  # Fallback image
 
         with sqlite3.connect('database.db') as conn:
-            cur = conn.cursor()
-            cur.execute('''INSERT INTO products (name, price, description, image, stock, categoryId) VALUES (?, ?, ?, ?, ?, ?)''', 
-                        (name, price, description, imagename, stock, categoryId))
-            conn.commit()
+            try:
+                cur = conn.cursor()
+                cur.execute('''INSERT INTO products (name, price, description, image, stock, categoryId) 
+                               VALUES (?, ?, ?, ?, ?, ?)''', (name, price, description, imagename, stock, categoryId))
+                conn.commit()
+            except:
+                conn.rollback()
+
         return redirect(url_for('admin_dashboard'))
-    return render_template("add_product.html")
+
+    # Fetch categories for dropdown
+    with sqlite3.connect('database.db') as conn:
+        cur = conn.cursor()
+        cur.execute('SELECT categoryId, name FROM categories')
+        categories = cur.fetchall()
+
+    return render_template('add_product.html', categories=categories)
+
+
 
 # Delete product (Admin only)
 @app.route("/admin/delete/<int:productId>")
