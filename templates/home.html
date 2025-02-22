@@ -18,53 +18,59 @@
         <ul class="nav-links">
             <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
             <li><a href="aboutus.html"><i class="fas fa-info-circle"></i> About Us</a></li>
-            <li><a href="ncte.html"><i class="fas fa-university"></i> FutureSkills PRIME</a></li>
-            <li><a href="infrastructure.html"><i class="fas fa-building"></i> Infrastructure</a></li>
-            <li><a href="career.html"><i class="fas fa-briefcase"></i> Careers</a></li>
-            <li><a href="faculties.html"><i class="fas fa-chalkboard-teacher"></i> Faculty</a></li>
-            <li><a href="sports.html"><i class="fas fa-futbol"></i> Sports</a></li>
             <li><a href="contact.html"><i class="fas fa-phone-alt"></i> Contact</a></li>
+
+            {% if not loggedIn %}
+                <li><a href="/loginForm"><i class="fas fa-sign-in-alt"></i> Sign In</a></li>
+            {% else %}
+                <li><p>Hello, {{firstName}}</p></li>
+                <li><a href="/account/orders"><i class="fas fa-box"></i> Your Orders</a></li>
+                <li><a href="/account/profile"><i class="fas fa-user"></i> Your Profile</a></li>
+                <li><a href="/logout"><i class="fas fa-sign-out-alt"></i> Sign Out</a></li>
+            {% endif %}
+
+            <li>
+                <a href="/cart">
+                    <i class="fas fa-shopping-cart"></i>
+                    Cart ({{ noOfItems }})
+                </a>
+            </li>
         </ul>
     </nav>
 
-    <!-- Header -->
-    <header id="header">
-        <form>
-            <input id="searchBox" type="text" placeholder="Search...">
-            <input id="searchButton" type="submit" value="Search">
-        </form>
-        <div class="user-options">
-            {% if not loggedIn %}
-                <a href="/loginForm">Sign In</a>
-            {% else %}
-                <div class="dropdown">
-                    <button class="dropbtn">Hello, {{firstName}}</button>
-                    <div class="dropdown-content">
-                        <a href="/account/orders">Your Orders</a>
-                        <a href="/account/profile">Your Profile</a>
-                        <hr>
-                        <a href="/logout">Sign Out</a>
-                    </div>
-                </div>
-            {% endif %}
-            <div id="cart">
-                <a href="/cart">
-                    <img src="{{ url_for('static', filename='images/shoppingCart.png') }}" id="cartIcon" alt="Cart">
-                    CART {{ noOfItems }}
-                </a>
-            </div>
+    <!-- Carousel -->
+    <div id="demo" class="carousel slide" data-ride="carousel">
+      <ul class="carousel-indicators">
+        <li data-target="#demo" data-slide-to="0" class="active"></li>
+        <li data-target="#demo" data-slide-to="1"></li>
+        <li data-target="#demo" data-slide-to="2"></li>
+      </ul>
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <img
+            src="https://cdn.glitch.global/74fd2e5a-d17a-4300-95da-c5ff21bfefa5/IMG20241212073102.jpg?v=1738871559620"
+            alt="Campus 1"
+          />
         </div>
-    </header>
-
-    <!-- Featured Slider -->
-    <div class="slider">
-        <button class="prev" onclick="prevSlide()">❮</button>
-        <div class="slides">
-            <img src="{{ url_for('static', filename='images/slider1.jpg') }}" alt="Featured 1">
-            <img src="{{ url_for('static', filename='images/slider2.jpg') }}" alt="Featured 2">
-            <img src="{{ url_for('static', filename='images/slider3.jpg') }}" alt="Featured 3">
+        <div class="carousel-item">
+          <img
+            src="https://cdn.glitch.global/74fd2e5a-d17a-4300-95da-c5ff21bfefa5/IMG20241210174652.jpg?v=1738871570110"
+            alt="Campus 2"
+          />
         </div>
-        <button class="next" onclick="nextSlide()">❯</button>
+        <div class="carousel-item">
+          <img
+            src="https://cdn.glitch.global/74fd2e5a-d17a-4300-95da-c5ff21bfefa5/IMG-20241208-WA0019.jpg?v=1738871549684"
+            alt="Campus 3"
+          />
+        </div>
+      </div>
+      <a class="carousel-control-prev" href="#demo" data-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+      </a>
+      <a class="carousel-control-next" href="#demo" data-slide="next">
+        <span class="carousel-control-next-icon"></span>
+      </a>
     </div>
 
     <!-- Product Grid -->
