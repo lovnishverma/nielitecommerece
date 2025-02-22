@@ -189,3 +189,18 @@ body {
     text-align: center;
     margin-top: 20px;
 }
+
+/* Carousel Styles */
+.carousel {
+    width: 100%;
+    max-width: 1200px; /* Adjust width as needed */
+    margin: 80px auto 20px; /* Ensure spacing from navbar */
+}
+
+/* Ensure images are properly displayed */
+.carousel-inner img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
