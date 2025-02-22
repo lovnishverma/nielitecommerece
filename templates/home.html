@@ -1,79 +1,229 @@
 <!DOCTYPE HTML>
-<html>
+<html lang="en">
 <head>
-<title>Welcome</title>
-<link rel="stylesheet" href={{ url_for('static', filename='css/home.css') }} />
-<link rel="stylesheet" href={{ url_for('static', filename='css/topStyle.css') }} />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome</title>
+    <style>
+        /* General Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Lato', sans-serif;
+        }
+        body {
+            background-color: #f5f5f5;
+        }
+
+        /* Header */
+        #header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: white;
+            padding: 15px 40px;
+            box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+        #searchBox {
+            padding: 10px;
+            width: 250px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        #searchButton {
+            padding: 10px;
+            border: none;
+            background-color: teal;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        #kart a {
+            text-decoration: none;
+            color: black;
+            font-weight: bold;
+        }
+        #cartIcon {
+            width: 30px;
+            vertical-align: middle;
+        }
+
+        /* Navigation */
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: black;
+            font-weight: bold;
+        }
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .dropbtn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            padding: 10px;
+            min-width: 150px;
+        }
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        /* Featured Slider */
+        .slider {
+            width: 100%;
+            overflow: hidden;
+            margin-top: 80px;
+        }
+        .slider img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+        }
+
+        /* Main Content */
+        .display {
+            display: flex;
+            padding: 40px;
+            gap: 30px;
+        }
+        .displayCategory {
+            flex: 1;
+        }
+        .displayCategory ul {
+            list-style: none;
+            padding: 0;
+        }
+        .displayCategory li {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .displayCategory a {
+            text-decoration: none;
+            color: black;
+        }
+        .items {
+            flex: 3;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .items img {
+            width: 100%;
+            border-radius: 10px;
+        }
+
+        /* Footer */
+        #footer {
+            background: #222;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 900px) {
+            .display {
+                flex-direction: column;
+                padding: 20px;
+            }
+            #header {
+                flex-direction: column;
+                padding: 10px;
+            }
+            .nav-links {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
 </head>
 <body>
-<div id="title">
-	<form>
-		<input id="searchBox" type="text" name="searchQuery">
-		<input id="searchButton" type="submit" value="Search">
-	</form>
 
-	{% if not loggedIn %}
-	<div id="signInButton">
-		<a class="link" href="/loginForm">Sign In</a>
-	</div>
-	{% else %}
-	<div class="dropdown">
-		<button class="dropbtn">Hello, <br>{{firstName}}</button>
-		<div class="dropdown-content">
-			<a href="/account/orders">Your orders</a>
-			<a href="/account/profile">Your profile</a>
-			<hr>
-			<a href="/logout">Sign Out</a>
-		</div>
-	</div>
-	{% endif %}
-	<div id="kart">
-		<a class="link" href="/cart">
-			<img src={{url_for('static', filename='images/shoppingCart.png')}} id="cartIcon" />
-			CART {{noOfItems}}
-		</a>
-	</div>
-</div>
-<div class="display">
-	<div class="displayCategory">
-		<h2>Shop by Category: </h2>
-		<ul>
-			{% for row in categoryData %}
-			<li><a href="/displayCategory?categoryId={{row[0]}}">{{row[1]}}</a></li>
-			{% endfor %}
-		</ul>
-	</div>
-	<div>
-		<h2>Items</h2>
-		{% for data in itemData %}
-		<table>
-			<tr id="productName">
-				{% for row in data %}
-				<td>
-					{{row[1]}}
-				</td>
-				{% endfor %}
-			</tr>
-			<tr id="productImage">
-				{% for row in data %}
-				<td>
-					<a href="/productDescription?productId={{row[0]}}">
-						<img src={{ url_for('static', filename='uploads/' + row[4]) }} id="itemImage" />
-					</a>
-				</td>
-				{% endfor %}
-			</tr>
-			<tr id="productPrice">
-				{% for row in data %}
-				<td>
-					Rs {{row[2]}}
-				</td>
-				{% endfor %}
-			</tr>
-		</table>
-		{% endfor %}
-	</div>
-</div>
+    <!-- Header -->
+    <div id="header">
+        <div>
+            <form>
+                <input id="searchBox" type="text" placeholder="Search...">
+                <input id="searchButton" type="submit" value="Search">
+            </form>
+        </div>
+        <div class="nav-links">
+            {% if not loggedIn %}
+            <a href="/loginForm">Sign In</a>
+            {% else %}
+            <div class="dropdown">
+                <button class="dropbtn">Hello, {{firstName}}</button>
+                <div class="dropdown-content">
+                    <a href="/account/orders">Your Orders</a>
+                    <a href="/account/profile">Your Profile</a>
+                    <hr>
+                    <a href="/logout">Sign Out</a>
+                </div>
+            </div>
+            {% endif %}
+            <div id="kart">
+                <a href="/cart">
+                    <img src="{{ url_for('static', filename='images/shoppingCart.png') }}" id="cartIcon" />
+                    CART {{ noOfItems }}
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Featured Slider -->
+    <div class="slider">
+        <img src="{{ url_for('static', filename='images/slider1.jpg') }}" alt="Featured 1">
+    </div>
+
+    <!-- Main Display -->
+    <div class="display">
+        <div class="displayCategory">
+            <h2>Shop by Category:</h2>
+            <ul>
+                {% for row in categoryData %}
+                <li><a href="/displayCategory?categoryId={{row[0]}}">{{row[1]}}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="items">
+            <h2>Items</h2>
+            {% for data in itemData %}
+            <div class="product">
+                {% for row in data %}
+                <a href="/productDescription?productId={{row[0]}}">
+                    <img src="{{ url_for('static', filename='uploads/' + row[4]) }}" />
+                </a>
+                <h3>{{ row[1] }}</h3>
+                <p>Rs {{ row[2] }}</p>
+                {% endfor %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div id="footer">
+        <p>&copy; 2025 NIELITECOM. All Rights Reserved.</p>
+    </div>
+
 </body>
 </html>
-
