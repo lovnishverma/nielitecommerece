@@ -13,7 +13,7 @@
             font-family: 'Lato', sans-serif;
         }
         body {
-            background-color: #f5f5f5;
+            background-color: #f8f8f8;
         }
 
         /* Header */
@@ -21,7 +21,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background-color: white;
+            background: white;
             padding: 15px 40px;
             box-shadow: 0 1px 5px rgba(0,0,0,0.1);
             position: fixed;
@@ -53,37 +53,43 @@
             vertical-align: middle;
         }
 
-        /* Navigation */
-        .nav-links {
-            display: flex;
+        /* Product Grid */
+        .items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
+            padding: 100px 40px 40px;
         }
-        .nav-links a {
-            text-decoration: none;
-            color: black;
-            font-weight: bold;
-        }
-        .dropdown {
-            position: relative;
-            display: inline-block;
-        }
-        .dropbtn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-        }
-        .dropdown-content {
-            display: none;
-            position: absolute;
+        .product {
             background: white;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            padding: 10px;
-            min-width: 150px;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
-        .dropdown:hover .dropdown-content {
-            display: block;
+        .product img {
+            width: 250px;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+        .product h3 {
+            margin: 10px 0;
+        }
+
+        /* Add to Cart Button */
+        .addToCart {
+            display: inline-block;
+            text-decoration: none;
+            background-color: #28a745;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        .addToCart:hover {
+            background-color: #218838;
         }
 
         /* Featured Slider */
@@ -91,44 +97,30 @@
             width: 100%;
             overflow: hidden;
             margin-top: 80px;
+            position: relative;
         }
-        .slider img {
+        .slides {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+        .slides img {
             width: 100%;
             height: 400px;
             object-fit: cover;
         }
-
-        /* Main Content */
-        .display {
-            display: flex;
-            padding: 40px;
-            gap: 30px;
-        }
-        .displayCategory {
-            flex: 1;
-        }
-        .displayCategory ul {
-            list-style: none;
-            padding: 0;
-        }
-        .displayCategory li {
+        .prev, .next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
             padding: 10px;
-            border-bottom: 1px solid #ddd;
+            cursor: pointer;
+            border: none;
+            font-size: 20px;
         }
-        .displayCategory a {
-            text-decoration: none;
-            color: black;
-        }
-        .items {
-            flex: 3;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-        }
-        .items img {
-            width: 100%;
-            border-radius: 10px;
-        }
+        .prev { left: 10px; }
+        .next { right: 10px; }
 
         /* Footer */
         #footer {
@@ -138,34 +130,15 @@
             padding: 20px;
             margin-top: 40px;
         }
-
-        /* Responsive Design */
-        @media (max-width: 900px) {
-            .display {
-                flex-direction: column;
-                padding: 20px;
-            }
-            #header {
-                flex-direction: column;
-                padding: 10px;
-            }
-            .nav-links {
-                flex-direction: column;
-                align-items: center;
-            }
-        }
     </style>
 </head>
 <body>
-
     <!-- Header -->
     <div id="header">
-        <div>
-            <form>
-                <input id="searchBox" type="text" placeholder="Search...">
-                <input id="searchButton" type="submit" value="Search">
-            </form>
-        </div>
+        <form>
+            <input id="searchBox" type="text" placeholder="Search...">
+            <input id="searchButton" type="submit" value="Search">
+        </form>
         <div class="nav-links">
             {% if not loggedIn %}
             <a href="/loginForm">Sign In</a>
@@ -191,39 +164,34 @@
 
     <!-- Featured Slider -->
     <div class="slider">
-        <img src="{{ url_for('static', filename='images/slider1.jpg') }}" alt="Featured 1">
+        <button class="prev" onclick="prevSlide()">❮</button>
+        <div class="slides">
+            <img src="{{ url_for('static', filename='images/slider1.jpg') }}" alt="Featured 1">
+            <img src="{{ url_for('static', filename='images/slider2.jpg') }}" alt="Featured 2">
+            <img src="{{ url_for('static', filename='images/slider3.jpg') }}" alt="Featured 3">
+        </div>
+        <button class="next" onclick="nextSlide()">❯</button>
     </div>
 
     <!-- Main Display -->
-    <div class="display">
-        <div class="displayCategory">
-            <h2>Shop by Category:</h2>
-            <ul>
-                {% for row in categoryData %}
-                <li><a href="/displayCategory?categoryId={{row[0]}}">{{row[1]}}</a></li>
-                {% endfor %}
-            </ul>
-        </div>
-        <div class="items">
-            <h2>Items</h2>
-            {% for data in itemData %}
-            <div class="product">
-                {% for row in data %}
-                <a href="/productDescription?productId={{row[0]}}">
-                    <img src="{{ url_for('static', filename='uploads/' + row[4]) }}" />
-                </a>
-                <h3>{{ row[1] }}</h3>
-                <p>Rs {{ row[2] }}</p>
-                {% endfor %}
-            </div>
+    <div class="items">
+        {% for data in itemData %}
+        <div class="product">
+            {% for row in data %}
+            <a href="/productDescription?productId={{row[0]}}">
+                <img src="{{ url_for('static', filename='uploads/' + row[4]) }}" />
+            </a>
+            <h3>{{ row[1] }}</h3>
+            <p>Rs {{ row[2] }}</p>
+            <a href="/addToCart?productId={{ row[0] }}" class="addToCart">Add to Cart</a>
             {% endfor %}
         </div>
+        {% endfor %}
     </div>
 
     <!-- Footer -->
     <div id="footer">
-        <p>&copy; 2025 NIELITECOM. All Rights Reserved.</p>
+        <p>&copy; 2025 NIELIT. All Rights Reserved.</p>
     </div>
-
 </body>
 </html>
