@@ -49,8 +49,8 @@
 		<tr id="productImage">
 			{% for row in itemData %}
 			<td>
-				<a href="/productDescription?productId={{row[0]}}">
-					<img src={{ url_for('static', filename='uploads/' + row[3]) }} id="itemImage" />
+				<a href="/productDescription?productId={{row[3]}}">
+					<img src={{ url_for('static', filename='uploads/' + row[4]) }} id="itemImage" />
 				</a>
 			</td>
 			{% endfor %}
