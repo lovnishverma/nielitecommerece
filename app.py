@@ -310,49 +310,30 @@ def cart():
         totalPrice += row[2]
     return render_template("cart.html", products = products, totalPrice=totalPrice, loggedIn=loggedIn, firstName=firstName, noOfItems=noOfItems)
 
-@app.route("/addToWishlist", methods=['GET', 'POST'])
+  
+@app.route("/addToWishlist", methods=["GET", "POST"])
 def add_to_wishlist():
-    if 'email' not in session:
-        return redirect(url_for('loginForm'))
-    
-    if request.method == 'GET':
-        productId = request.args.get('productId')  # Get product ID from URL
-    else:
-        productId = request.form.get('productId')  # Get product ID from form if POST
+    if 'email' not in session:  # Ensure user is logged in
+        return redirect(url_for('loginForm'))  
 
-    if not productId:
-        return redirect(url_for('root'))  # Redirect if no product ID is found
-
-    productId = int(productId)  # Convert product ID to integer
+    product_id = request.args.get('productId')  # Get productId from URL (GET request)
+    if not product_id:
+        product_id = request.form.get('productId')  # If not in URL, check form data (POST request)
 
     with sqlite3.connect('database.db') as conn:
         cur = conn.cursor()
-
-        # Get user ID based on session email
         cur.execute("SELECT userId FROM users WHERE email = ?", (session['email'],))
-        user = cur.fetchone()
+        user_id = cur.fetchone()[0]
 
-        if not user:
-            return redirect(url_for('root'))  # Redirect to homepage if user not found
+        # Check if product is already in the wishlist
+        cur.execute("SELECT * FROM wishlist WHERE userId = ? AND productId = ?", (user_id, product_id))
+        if not cur.fetchone():
+            cur.execute("INSERT INTO wishlist (userId, productId) VALUES (?, ?)", (user_id, product_id))
+            conn.commit()
+    
+    return redirect(url_for('wishlist'))  #  Redirect to wishlist page
 
-        userId = user[0]
 
-        # Check if the product is already in the wishlist
-        cur.execute("SELECT * FROM wishlist WHERE userId=? AND productId=?", (userId, productId))
-        existing_entry = cur.fetchone()
-
-        try:
-            if not existing_entry:
-                # Add product to wishlist
-                cur.execute("INSERT INTO wishlist (userId, productId) VALUES (?, ?)", (userId, productId))
-                conn.commit()
-        except:
-            conn.rollback()
-
-    return redirect(url_for('wishlist'))
-
-  
-  
 @app.route('/removeFromWishlist', methods=['POST'])
 def remove_from_wishlist():
     if 'userId' not in session:
@@ -373,26 +354,23 @@ def remove_from_wishlist():
 
 @app.route('/wishlist')
 def wishlist():
-    if 'userId' not in session:
+    if 'email' not in session:
         return redirect(url_for('loginForm'))
 
-    user_id = session['userId']
+    with sqlite3.connect('database.db') as conn:
+        cur = conn.cursor()
+        cur.execute("SELECT userId FROM users WHERE email = ?", (session['email'],))
+        user_id = cur.fetchone()[0]
 
-    conn = sqlite3.connect('database.db')
-    cursor = conn.cursor()
-
-    # Retrieve wishlist items with product details
-    cursor.execute('''SELECT products.productId, products.name, products.price, products.image
-                      FROM wishlist
-                      JOIN products ON wishlist.productId = products.productId
-                      WHERE wishlist.userId = ?''', (user_id,))
-    
-    wishlist_items = cursor.fetchall()
-    conn.close()
+        # Retrieve wishlist items with product details
+        cur.execute('''SELECT products.productId, products.name, products.price, products.image
+                        FROM wishlist
+                        JOIN products ON wishlist.productId = products.productId
+                        WHERE wishlist.userId = ?''', (user_id,))
+        
+        wishlist_items = cur.fetchall()
 
     return render_template('wishlist.html', wishlist_items=wishlist_items)
-
-
 
 @app.route("/checkout")
 def checkout():

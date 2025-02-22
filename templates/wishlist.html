@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wishlist</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+    <h1>My Wishlist</h1>
+    {% if wishlist_items %}
+        <ul>
+            {% for item in wishlist_items %}
+                <li>
+                    <img src="{{ item[3] }}" alt="{{ item[1] }}" width="100">
+                    <strong>{{ item[1] }}</strong> - ${{ item[2] }}
+                    <form action="{{ url_for('remove_from_wishlist') }}" method="post">
+                        <input type="hidden" name="productId" value="{{ item[0] }}">
+                        <button type="submit">Remove</button>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Your wishlist is empty.</p>
+    {% endif %}
+    <a href="{{ url_for('root') }}">Back to Home</a>
+</body>
+</html>
