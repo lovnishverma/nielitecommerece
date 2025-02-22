@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h2>Admin Dashboard</h2>
+    
+    <a href="{{ url_for('add_product') }}" class="btn">Add New Product</a>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Description</th>
+                <th>Stock</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+            <tr>
+                <td>{{ product[0] }}</td>
+                <td><img src="{{ url_for('static', filename='uploads/' + product[3]) }}" width="50" height="50"></td>
+                <td>{{ product[1] }}</td>
+                <td>${{ product[2] }}</td>
+                <td>{{ product[4] }}</td>
+                <td>{{ product[5] }}</td>
+                <td>
+                    <a href="{{ url_for('edit_product', productId=product[0]) }}" class="btn">Edit</a>
+                    <a href="{{ url_for('delete_product', productId=product[0]) }}" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ url_for('root') }}" class="btn">Back to Home</a>
+</body>
+</html>
