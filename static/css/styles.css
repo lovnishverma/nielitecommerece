@@ -1,12 +1,198 @@
-/* General Styles */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Lato', sans-serif;
+/* Smooth scrolling behavior for the entire page */
+html {
+  scroll-behavior: smooth;
 }
+
+/* Global body styling */
 body {
-    background-color: #f8f8f8;
+  font-family: "Roboto", sans-serif;
+}
+
+/* Stylish Heading */
+h1 {
+  font-family: "Poppins", sans-serif; /* Modern and professional font */
+  font-weight: 700; /* Bold for emphasis */
+  font-size: 2.5rem; /* Adjust size */
+  text-transform: uppercase; /* Makes it look structured */
+  text-align: center;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(135deg, #ff7e5f, #feb47b); /* Gradient effect */
+  -webkit-background-clip: text; /* Clip background to text */
+  -webkit-text-fill-color: transparent; /* Make text gradient visible */
+  letter-spacing: 1.5px; /* Spacing for elegance */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); /* Subtle depth */
+}
+
+/* Responsive Scaling */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2rem;
+  }
+}
+
+/* Logo image size */
+.logo {
+  width: 1200px;
+  height: auto;
+}
+
+/* Navbar Styling */
+.navbar {
+  background-color: WHITE;
+}
+
+.navbar a {
+  color: black !important;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 12px 20px;
+}
+
+.navbar a:hover {
+  background-color: #457b9d;
+  color: black;
+  border-radius: 5px;
+}
+.navbar-toggler .fas {
+  color: black;
+}
+
+.navbar-brand img {
+  width: 50px;
+}
+
+.navbar-toggler-icon {
+  background-color: black;
+}
+
+/* Carousel styling */
+.carousel-item img {
+  width: 100%;
+  height: 500px;
+  object-fit: cover;
+}
+
+/* Content section styling */
+.content-section {
+  padding: 50px 15px;
+  text-align: center;
+}
+
+/* Professional Card Styling */
+.card {
+  border: none;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: black;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #2b5876, #4e4376);
+}
+
+/* Card Hover Effect */
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Card Header Styling */
+.card-header {
+  background: rgba(255, 255, 255, 0.1);
+  border-bottom: none;
+  text-transform: uppercase;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+/* Card Body Styling */
+.card-body {
+  padding: 20px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* Icon Styling */
+.card i {
+  font-size: 40px;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 10px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .card {
+    margin-bottom: 20px;
+  }
+}
+
+/* Footer section styling */
+.footer {
+  background-color: #1d3557;
+  color: #fff;
+  padding: 15px;
+  text-align: center;
+}
+
+.footer p {
+  margin: 0;
+}
+
+#return-to-top {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: rgb(0, 0, 0);
+  background: rgba(0, 0, 0, 0.7);
+  width: 50px;
+  height: 50px;
+  display: block;
+  text-decoration: none;
+  -webkit-border-radius: 35px;
+  -moz-border-radius: 35px;
+  border-radius: 35px;
+  display: none;
+  -webkit-transition: all 0.3s linear;
+  -moz-transition: all 0.3s ease;
+  -ms-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+#return-to-top i {
+  color: #fff;
+  margin: 0;
+  position: relative;
+  left: 16px;
+  top: 13px;
+  font-size: 19px;
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  -ms-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+#return-to-top:hover {
+  background: rgba(0, 0, 0, 0.9);
+}
+#return-to-top:hover i {
+  color: #fff;
+  top: 5px;
+}
+
+/* Extra Things */
+body {
+  background: #eee;
+  font-family: "Open Sans", sans-serif;
+}
+h3 {
+  font-size: 30px;
+  font-weight: 400;
+  text-align: center;
+  margin-top: 50px;
+}
+h3 i {
+  color: #444;
 }
 
 /* Navbar */
@@ -59,16 +245,3 @@ body {
     background-color: #218838;
 }
 
-/* Footer */
-#footer {
-    background: #222;
-    color: white;
-    text-align: center;
-    padding: 20px;
-}
-
-.carousel-item img {
-    max-height: 200px; /* Adjust height as needed */
-    width: 50%; /* Ensures full width */
-    object-fit: cover; /* Crops excess while maintaining aspect ratio */
-}

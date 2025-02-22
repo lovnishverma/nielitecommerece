@@ -29,6 +29,13 @@
             <img src="https://cdn.glitch.global/74fd2e5a-d17a-4300-95da-c5ff21bfefa5/gtnielit%20logo.png?v=1738870304490" class="logo" alt="NIELIT Logo">
         </a>
         <ul class="nav-links">
+          
+           {% if not loggedIn %}
+              
+            {% else %}
+                <li><p>Hello, {{firstName}}</p></li>
+            {% endif %}
+          
             <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
             <li><a href="aboutus.html"><i class="fas fa-info-circle"></i> About Us</a></li>
             <li><a href="contact.html"><i class="fas fa-phone-alt"></i> Contact</a></li>
@@ -36,7 +43,6 @@
             {% if not loggedIn %}
                 <li><a href="/loginForm"><i class="fas fa-sign-in-alt"></i> Sign In</a></li>
             {% else %}
-                <li><p>Hello, {{firstName}}</p></li>
                 <li><a href="/account/orders"><i class="fas fa-box"></i> Your Orders</a></li>
                 <li><a href="/account/profile"><i class="fas fa-user"></i> Your Profile</a></li>
                 <li><a href="/logout"><i class="fas fa-sign-out-alt"></i> Sign Out</a></li>
@@ -49,6 +55,53 @@
                 </a>
             </li>
         </ul>
+      
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarNav"
+      >
+        <i class="fas fa-bars"></i>
+        <!-- Using Font Awesome Hamburger Icon -->
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+          <ul class="nav-links">
+          
+           {% if not loggedIn %}
+              
+            {% else %}
+                <li><p>Hello, {{firstName}}</p></li>
+            {% endif %}
+          
+            <li class="nav-item">
+            <a class="nav-link" href="index.html"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="aboutus.html"><i class="fas fa-info-circle"></i> About Us</a></li>
+            <li><a href="contact.html"><i class="fas fa-phone-alt"></i> Contact</a></li>
+
+            {% if not loggedIn %}
+                <li><a href="/loginForm"><i class="fas fa-sign-in-alt"></i> Sign In</a></li>
+            {% else %}
+                <li><a href="/account/orders"><i class="fas fa-box"></i> Your Orders</a></li>
+                <li><a href="/account/profile"><i class="fas fa-user"></i> Your Profile</a></li>
+                <li><a href="/logout"><i class="fas fa-sign-out-alt"></i> Sign Out</a></li>
+            {% endif %}
+
+            <li>
+                <a href="/cart">
+                    <i class="fas fa-shopping-cart"></i>
+                    Cart ({{ noOfItems }})
+                </a>
+            </li>
+        </ul>
+          </li>
+        </ul>
+      </div>
+    </nav>
+      
+      
+      
     </nav>
 
     <!-- Carousel -->
