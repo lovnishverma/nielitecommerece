@@ -65,19 +65,21 @@
         <div class="row g-4">
             {% for data in itemData %}
                 {% for row in data %}
-                <div class="col-md-4">
-                    <div class="card shadow-sm text-center">
+                <div class="col-lg-4 col-md-6 col-sm-12">
+                    <div class="card shadow-sm text-center h-100">
                         <a href="/productDescription?productId={{row[0]}}">
-                            <img src="{{ url_for('static', filename='uploads/' + row[4]) }}" class="card-img-top" alt="{{ row[1] }}">
+                            <img src="{{ url_for('static', filename='uploads/' + row[4]) }}" class="card-img-top p-3" alt="{{ row[1] }}">
                         </a>
-                        <div class="card-body">
+                        <div class="card-body d-flex flex-column">
                             <h5 class="card-title">{{ row[1] }}</h5>
-                            <p class="card-text text-success">Rs {{ row[2] }}</p>
-                            <a href="/addToCart?productId={{ row[0] }}" class="btn btn-success">Add to Cart</a>
-                            <form action="{{ url_for('add_to_wishlist') }}" method="post" class="d-inline">
-                                <input type="hidden" name="productId" value="{{ row[0] }}">
-                                <button type="submit" class="btn btn-danger"><i class="fas fa-heart"></i> Wishlist</button>
-                            </form>
+                            <p class="card-text text-success fw-bold">Rs {{ row[2] }}</p>
+                            <div class="mt-auto">
+                                <a href="/addToCart?productId={{ row[0] }}" class="btn btn-success">Add to Cart</a>
+                                <form action="{{ url_for('add_to_wishlist') }}" method="post" class="d-inline">
+                                    <input type="hidden" name="productId" value="{{ row[0] }}">
+                                    <button type="submit" class="btn btn-danger"><i class="fas fa-heart"></i> Wishlist</button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
