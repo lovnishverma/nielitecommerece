@@ -203,4 +203,66 @@ body {
     height: auto;
     object-fit: cover;
 }
+.card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
 
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+
+/* Product Grid Styling */
+.row {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+/* Product Card Hover Effect */
+.card {
+    transition: all 0.4s ease-in-out;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.card:hover {
+    transform: translateY(-10px) scale(1.03);
+    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* Image Hover Effect */
+.card img {
+    transition: transform 0.4s ease-in-out, opacity 0.3s ease-in-out;
+}
+
+.card:hover img {
+    transform: scale(1.1);
+    opacity: 0.9;
+}
+
+/* Button Hover Effects */
+.card .btn {
+    transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.card .btn:hover {
+    transform: scale(1.1);
+}
+
+/* Wishlist Button Styling */
+.card .btn-danger:hover {
+    background-color: #c82333;
+}
+
+/* Add to Cart Button Styling */
+.card .btn-success:hover {
+    background-color: #218838;
+}
+
+/* Grid Hover Effect */
+.container:hover .card {
+    transform: scale(1.02);
+    transition: transform 0.3s ease-in-out;
+}
