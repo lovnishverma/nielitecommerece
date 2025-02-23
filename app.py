@@ -337,52 +337,38 @@ def add_to_wishlist():
 @app.route('/remove_from_wishlist', methods=['POST'])
 def remove_from_wishlist():
     if 'user_id' not in session:
-        flash("Please log in to modify your wishlist.", "warning")
-        return redirect(url_for('loginForm'))  # Redirect to login page
+        return redirect(url_for('login'))  # Redirect to login if user is not logged in
 
-    product_id = request.form.get('productId')  # Get product ID from form
+    user_id = session['user_id']
+    product_id = request.form.get('productId')
 
-    if not product_id:
-        flash("Invalid product ID.", "danger")
-        return redirect(url_for('wishlist'))  # Stay on wishlist page
-
-    try:
+    if product_id:
         conn = sqlite3.connect('database.db')
         cursor = conn.cursor()
-
-        # Delete from wishlist where user_id and product_id match
-        cursor.execute("DELETE FROM wishlist WHERE user_id = ? AND product_id = ?", (session['user_id'], product_id))
+        cursor.execute("DELETE FROM wishlist WHERE userId = ? AND productId = ?", (user_id, product_id))
         conn.commit()
         conn.close()
 
-        flash("Item removed from wishlist.", "success")
-    except Exception as e:
-        flash(f"Error: {str(e)}", "danger")
-
-    return redirect(url_for('wishlist'))  # Redirect to wishlist page
-
-
+    return redirect(url_for('wishlist'))  # Refresh the wishlist page
+  
 
 @app.route('/wishlist')
 def wishlist():
-    if 'email' not in session:
-        return redirect(url_for('loginForm'))
+    if 'user_id' not in session:
+        return redirect(url_for('login'))  # Redirect if not logged in
 
-    with sqlite3.connect('database.db') as conn:
-        cur = conn.cursor()
-        cur.execute("SELECT userId FROM users WHERE email = ?", (session['email'],))
-        user_id = cur.fetchone()[0]
+    print("Current user ID:", session.get('user_id'))  # Debugging
+    user_id = session['user_id']
 
-        # Retrieve wishlist items with product details
-        cur.execute('''SELECT products.productId, products.name, products.price, products.image
-                        FROM wishlist
-                        JOIN products ON wishlist.productId = products.productId
-                        WHERE wishlist.userId = ?''', (user_id,))
-        
-        wishlist_items = cur.fetchall()
+    conn = sqlite3.connect('database.db')
+    cursor = conn.cursor()
+    cursor.execute("SELECT wishlist.productId, products.name, products.price, products.image FROM wishlist INNER JOIN products ON wishlist.productId = products.productId WHERE wishlist.userId = ?", (user_id,))
+    wishlist_items = cursor.fetchall()
+    conn.close()
 
     return render_template('wishlist.html', wishlist_items=wishlist_items)
 
+  
 @app.route("/checkout")
 def checkout():
     if 'email' not in session:
