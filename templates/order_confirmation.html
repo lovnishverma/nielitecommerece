@@ -1,11 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Order Confirmation</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #f3f3f3, #e3e3e3);
+            font-family: 'Poppins', sans-serif;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            position: relative;
+        }
+        h2 {
+            color: #28a745;
+            font-size: 1.8em;
+        }
+        p {
+            font-size: 1.2em;
+            color: #333;
+        }
+        .home-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 20px;
+            font-size: 1.2em;
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+        .home-btn:hover {
+            background: #0056b3;
+        }
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: gold;
+            top: 50%;
+            left: 50%;
+            opacity: 0;
+            animation: confetti-fall 1.5s linear infinite;
+        }
+        @keyframes confetti-fall {
+            0% { transform: translateY(-50px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(200px) rotate(360deg); opacity: 0; }
+        }
+    </style>
 </head>
 <body>
-    <h2>Order Placed Successfully!</h2>
-    <p>Order Date: {{ order_date }}</p>
-    <a href="{{ url_for('root') }}">Go to Home</a>
+    <div class="container">
+        <h2>🎉 Order Placed Successfully! 🎉</h2>
+        <p>Order Date: {{ order_date }}</p>
+        <a href="{{ url_for('root') }}" class="home-btn">Go to Home</a>
+    </div>
 </body>
 </html>

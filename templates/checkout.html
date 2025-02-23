@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/cart.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/topStyle.css') }}">
     <style>
-        /* Reset styles */
         * {
             margin: 0;
             padding: 0;
@@ -16,7 +15,7 @@
         }
 
         body {
-            background: #f4f4f4;
+            background: linear-gradient(135deg, #f8f9fa, #dee2e6);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -25,103 +24,74 @@
             padding: 20px;
         }
 
-        #title {
+        .container {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 500px;
             width: 100%;
-            max-width: 600px;
+        }
+
+        h2 {
+            color: #343a40;
+            margin-bottom: 15px;
+        }
+
+        .total-box {
             background: white;
             padding: 15px;
             border-radius: 8px;
             box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #212529;
             margin-bottom: 20px;
         }
 
-        #total {
-            background: white;
-            padding: 20px;
-            max-width: 400px;
-            width: 100%;
-            text-align: center;
-            border-radius: 8px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-            font-size: 1.2em;
-            font-weight: bold;
-            color: #333;
-        }
-
         .pay-button {
-            display: block;
-            text-align: center;
-            margin-top: 20px;
-            padding: 12px;
+            display: inline-block;
+            padding: 14px;
             width: 100%;
-            max-width: 400px;
-            background: #007bff;
+            background: linear-gradient(135deg, #007bff, #0056b3);
             color: white;
             font-size: 1.2em;
-            border-radius: 5px;
+            border-radius: 6px;
             text-decoration: none;
             font-weight: bold;
-            transition: 0.3s ease;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
         }
 
         .pay-button:hover {
-            background: #0056b3;
+            transform: scale(1.05);
+            background: linear-gradient(135deg, #0056b3, #003d80);
         }
 
         /* Responsive Design */
         @media (max-width: 480px) {
-            #title {
-                padding: 10px;
-            }
-            #total {
-                font-size: 1em;
+            .container {
                 padding: 15px;
             }
             .pay-button {
                 font-size: 1em;
-                padding: 10px;
+                padding: 12px;
             }
         }
     </style>
 </head>
 <body>
 
-<div id="title">
-    <form>
-        <input id="searchBox" type="text" name="searchQuery" placeholder="Search">
-        <input id="searchButton" type="submit" value="Search">
-    </form>
-
-    {% if not loggedIn %}
-        <div id="signInButton">
-            <a class="link" href="/loginForm">Sign In</a>
-        </div>
-    {% else %}
-        <div class="dropdown">
-            <button class="dropbtn">Hello, <br>{{ firstName }}</button>
-            <div class="dropdown-content">
-                <a href="/account/orders">Your orders</a>
-                <a href="/account/profile">Your profile</a>
-                <hr>
-                <a href="/logout">Sign Out</a>
-            </div>
-        </div>
-    {% endif %}
-
-    <div id="kart">
-        <a class="link" href="/cart">
-            <img src="{{ url_for('static', filename='images/shoppingCart.png') }}" id="cartIcon" />
-            CART {{ noOfItems }}
-        </a>
+<div class="container">
+    <h2>Checkout</h2>
+    <div class="total-box">
+        Total Amount: Rs {{ totalPrice }}
     </div>
+    <a href="/saveorder" class="pay-button">Proceed to Pay</a>
 </div>
-
-<div id="total">
-    Proceed to pay Rs {{ totalPrice }}
-</div>
-
-<a href="/saveorder" class="pay-button">Pay Now</a>
 
 </body>
 </html>
