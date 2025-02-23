@@ -266,3 +266,25 @@ body {
     transform: scale(1.02);
     transition: transform 0.3s ease-in-out;
 }
+/* Reduce navbar height */
+.navbar {
+  padding: 5px 10px; /* Adjusts the height */
+  min-height: 50px;
+}
+
+/* Reduce logo size */
+.navbar-brand img {
+  height: 40px; /* Adjust as needed */
+}
+
+/* Reduce navbar height further for mobile */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 3px 5px;
+    min-height: 45px;
+  }
+
+  .navbar-brand img {
+    height: 35px;
+  }
+}
