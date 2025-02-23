@@ -76,14 +76,17 @@
             {% for item in wishlist_items %}
                 <div class="col-md-4 mb-4">
                     <div class="wishlist-item">
-                        <img src="{{ item[3] }}" alt="{{ item[1] }}">
+                        <img src="{{ url_for('static', filename='uploads/' + item[3]) }}" 
+     onerror="this.onerror=null; this.src='{{ url_for('static', filename='images/default.jpg') }}';"
+     alt="{{ item[1] }}">
+form
                         <h5>{{ item[1] }}</h5>
                         <p><strong>Rs {{ item[2] }}</strong></p>
                         <form action="{{ url_for('remove_from_wishlist') }}" method="post">
-                            <input type="hidden" name="productId" value="{{ item[0] }}">
-                            <button type="submit"><i class="fas fa-trash-alt"></i> Remove</button>
-                        </form>
-                    </div>
+    <input type="hidden" name="productId" value="{{ item[0] }}">
+    <button type="submit" class="remove-btn">Remove</button>
+</form>
+
                 </div>
             {% endfor %}
         </div>

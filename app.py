@@ -334,23 +334,34 @@ def add_to_wishlist():
     return redirect(url_for('wishlist'))  #  Redirect to wishlist page
 
 
-@app.route('/removeFromWishlist', methods=['POST'])
+@app.route('/remove_from_wishlist', methods=['POST'])
 def remove_from_wishlist():
-    if 'userId' not in session:
-        return redirect(url_for('loginForm'))
+    if 'user_id' not in session:
+        flash("Please log in to modify your wishlist.", "warning")
+        return redirect(url_for('loginForm'))  # Redirect to login page
 
-    user_id = session['userId']
-    product_id = request.form.get('productId')
+    product_id = request.form.get('productId')  # Get product ID from form
 
-    conn = sqlite3.connect('database.db')
-    cursor = conn.cursor()
-    
-    # Remove the product from wishlist
-    cursor.execute("DELETE FROM wishlist WHERE userId=? AND productId=?", (user_id, product_id))
-    conn.commit()
-    conn.close()
+    if not product_id:
+        flash("Invalid product ID.", "danger")
+        return redirect(url_for('wishlist'))  # Stay on wishlist page
 
-    return redirect(url_for('wishlist'))
+    try:
+        conn = sqlite3.connect('database.db')
+        cursor = conn.cursor()
+
+        # Delete from wishlist where user_id and product_id match
+        cursor.execute("DELETE FROM wishlist WHERE user_id = ? AND product_id = ?", (session['user_id'], product_id))
+        conn.commit()
+        conn.close()
+
+        flash("Item removed from wishlist.", "success")
+    except Exception as e:
+        flash(f"Error: {str(e)}", "danger")
+
+    return redirect(url_for('wishlist'))  # Redirect to wishlist page
+
+
 
 @app.route('/wishlist')
 def wishlist():
