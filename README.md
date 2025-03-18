@@ -1,26 +1,67 @@
-# Flask-E-commerce
+# Flask E-Commerce
 
-This is a simple e-commerce website in python Flask framework. It allows the user to signup/login, shop.  I've hosted my Flask application on Glitch.com.
+A simple e-commerce website built using the Flask framework in Python. The application allows users to sign up, log in, and shop seamlessly. The platform is hosted on [Glitch](https://glitch.com), making it accessible online.
 
-Future Improvements:
-Payment gateway integration; make the payment using Instamojo.
+## Features
+- User authentication (Signup/Login)
+- Browse and purchase products
+- Admin panel for managing products and users
+- SQLite database for storing user and product details
+- Future improvement: Payment gateway integration using Instamojo
 
-Admin E-Mail: admin@nielit.gov.in
-Admin Password: admin@nielit.gov.in
+## Live Demo
+Try out the application here: [NIELIT E-Commerce](https://nielitecommerece.glitch.me/)
 
-# Pre-requisites
+## Admin Credentials
+Use the following credentials to log in as an admin:
 
-Python 3.6.4
+- **Admin Email**: `admin@nielit.gov.in`
+- **Admin Password**: `admin@nielit.gov.in`
 
-pip 9.0.1
+## Prerequisites
+Ensure you have the following installed on your system before running the application:
 
-Flask version: '0.12.2'
+- Python 3.6.4 or later
+- pip 9.0.1 or later
+- Flask `0.12.2`
+- SQLite
+- Other dependencies listed in `requirements.txt`
 
-Sqlite
-others listed in requirements.txt
+## Installation & Setup
+Follow these steps to set up the project locally:
 
+1. Clone the repository:
+   ```sh
+   git clone https://github.com/lovnishverma/https-nielitecommerece.glitch.me.git
+   cd https-nielitecommerece.glitch.me
+   ```
+2. Create a virtual environment and activate it:
+   ```sh
+   python -m venv venv
+   source venv/bin/activate  # On macOS/Linux
+   venv\Scripts\activate  # On Windows
+   ```
+3. Install dependencies:
+   ```sh
+   pip install -r requirements.txt
+   ```
+4. Run the Flask application:
+   ```sh
+   python app.py
+   ```
+5. Open your browser and go to `http://127.0.0.1:5000/` to access the application.
 
-Click on this URL to test it out: https://nielitecommerece.glitch.me/
+## Future Improvements
+- **Payment Gateway Integration:** Implement Instamojo for secure online payments.
+- **Enhanced Admin Dashboard:** More analytics and management features.
+- **Better UI/UX:** Improve frontend design for a smoother shopping experience.
 
-![image](https://github.com/user-attachments/assets/5b3fb933-6da3-4c42-bad5-53519dfbda18)
+## Contributing
+Contributions are welcome! Feel free to fork this repository, make enhancements, and submit a pull request.
+
+## License
+This project is licensed under the MIT License.
+
+---
+![E-Commerce Preview](https://github.com/user-attachments/assets/5b3fb933-6da3-4c42-bad5-53519dfbda18)
 
