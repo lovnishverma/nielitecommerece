@@ -15,9 +15,6 @@ idna
 instamojo-wrapper
 itsdangerous
 Jinja2
-Keras
-Keras-Applications
-Keras-Preprocessing
 Markdown
 MarkupSafe
 mercurial
@@ -30,8 +27,6 @@ PyYAML
 requests
 scipy
 six
-tensorboard
-tensorflow
 termcolor
 Theano
 typing
