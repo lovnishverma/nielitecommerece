@@ -1,6 +1,6 @@
 # Flask E-Commerce
 
-A simple e-commerce website built using the Flask framework in Python. The application allows users to sign up, log in, and shop seamlessly. The platform is hosted on [Glitch](https://glitch.com), making it accessible online.
+A simple e-commerce website built using the Flask framework in Python. The application allows users to sign up, log in, and shop seamlessly. The platform is hosted on [Glitch](https://glitch.com), *Note: now it is hosted on render.com* making it accessible online.
 
 ## Features
 - User authentication (Signup/Login)
